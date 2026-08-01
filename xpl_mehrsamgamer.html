@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>♕ Mehrsam Shorts ♕</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:tahoma;
+}
+
+
+body{
+
+background:linear-gradient(
+180deg,
+#a00000,
+#050505
+);
+
+color:white;
+
+overflow:hidden;
+
+}
+
+
+
+#explore{
+
+height:100vh;
+
+overflow-y:scroll;
+
+scroll-snap-type:y mandatory;
+
+}
+
+
+
+.short{
+
+height:100vh;
+
+width:100%;
+
+scroll-snap-align:start;
+
+position:relative;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+overflow:hidden;
+
+}
+
+
+
+.videoBox{
+
+width:95%;
+
+height:92%;
+
+border-radius:25px;
+
+overflow:hidden;
+
+border:3px solid red;
+
+box-shadow:
+0 0 25px red;
+
+background:black;
+
+position:absolute;
+
+}
+
+
+
+.videoBox iframe{
+
+width:100%;
+
+height:100%;
+
+border:none;
+
+}
+
+
+
+.watermark{
+
+position:absolute;
+
+top:35px;
+
+right:25px;
+
+font-size:20px;
+
+font-weight:bold;
+
+color:white;
+
+text-shadow:
+0 0 10px red;
+
+background:#0008;
+
+padding:10px;
+
+border-radius:15px;
+
+pointer-events:none;
+
+}
+
+
+
+.info{
+
+position:absolute;
+
+bottom:120px;
+
+right:25px;
+
+left:25px;
+
+z-index:10;
+
+background:#0008;
+
+padding:12px;
+
+border-radius:15px;
+
+}
+
+
+
+.info h2{
+
+color:#ff5555;
+
+}
+
+
+
+.buttons{
+
+position:absolute;
+
+left:20px;
+
+bottom:50%;
+
+transform:translateY(50%);
+
+z-index:20;
+
+display:flex;
+
+flex-direction:column;
+
+gap:15px;
+
+}
+
+
+
+.buttons button{
+
+width:55px;
+
+height:55px;
+
+border-radius:50%;
+
+border:2px solid red;
+
+background:#111;
+
+color:white;
+
+font-size:25px;
+
+cursor:pointer;
+
+}
+
+
+.buttons button:hover{
+
+transform:scale(1.1);
+
+}
+
+
+</style>
+</head>
+
+<body>
+
+
+<div id="explore"></div>
+
+
+<script>
+
+
+// 🎬 لیست ویدیوها
+// فقط همین قسمت را برای اضافه کردن ویدیوهای جدید تغییر بده 😎
+
+const videos=[
+
+
+{
+embed:"cnekmer",
+title:"ادیت حرفه ای من از دکتر هارلی سویر",
+desc:"Mehrsam Shorts 🔥"
+},
+
+
+{
+embed:"jnt6848",
+title:"ادیت حرفه ای من از کمیسر کیومرث",
+desc:"Mehrsam Shorts 🔥"
+},
+
+{
+embed:"ahgb642",
+title:"جامپ اسکر همه شخصیت های پاپی پلی تایم",
+desc:"Mehrsam Shorts 🔥"
+},
+{
+embed:"fxt08mc",
+title:"انمیشن دریم ( پارت ۱) ",
+desc:"Mehrsam Shorts 🔥"
+},
+{
+embed:"hedsl64",
+title:"انیمیشن دریم ( پارت ۲) ",
+desc:"Mehrsam Shorts 🔥"
+},
+{
+embed:"nvvm002",
+title:"بهترین گیم جهان",
+desc:"Mehrsam Shorts 🔥"
+},
+{
+embed:"eevwbnp",
+title:"انیمیشن دریم( پارت ۳) ",
+desc:"Mehrsam Shorts 🔥"
+},
+{
+embed:"gesc7j2",
+title:"Nightmare Huggy Wuggy",
+desc:"Mehrsam Shorts 🔥"
+},
+{
+embed:"vzj3biv",
+title:"ادیت حرفه ای من از خودم",
+desc:"Mehrsam Shorts 🔥"
+},
+{
+embed:"yghlc61",
+title:"ادیت از هیروبراین",
+desc:"Mehrsam Shorts 🔥"
+},
+{
+embed:"sdkw190",
+title:"ادیت حرفه ای خودم از ( دوستان آپاراتر ♕𝚖𝚎𝚑𝚛𝚜𝚊𝚖 𝚐𝚊𝚖𝚎𝚛♕) ",
+desc:"Mehrsam Shorts 🔥"
+},
+{
+embed:"lwvha2k",
+title:"آمانگ آس vs ماینکرفت",
+desc:"Mehrsam Shorts 🔥"
+},
+{
+embed:"gsw3j09",
+title:"موش",
+desc:"Mehrsam Shorts 🔥"
+},
+{
+embed:"txsdi0m",
+title:"کار با( نینجا)  کاراکتر جدید بزن بهادر",
+desc:"Mehrsam Shorts 🔥"
+},
+{
+embed:"use24m7",
+title:"ادیت حرفه ای از خودم",
+desc:"Mehrsam Shorts 🔥"
+},
+{
+embed:"wxqyl8n",
+title:"انیمیشن دریم ( پارت ۴) ",
+desc:"Mehrsam Shorts 🔥"
+},
+// ویدیوی جدید را اینجا اضافه کن:
+//
+// {
+// embed:"کد_ویدیو_آپارات",
+// title:"عنوان ویدیو",
+// desc:"توضیح"
+// },
+
+
+];
+
+
+
+
+
+const explore=document.getElementById("explore");
+
+
+
+videos.forEach((video,index)=>{
+
+
+let id="mehrsam_video_"+index;
+
+
+
+let short=document.createElement("div");
+
+short.className="short";
+
+
+
+short.innerHTML=`
+
+<div class="videoBox">
+
+
+<div id="${id}"></div>
+
+
+</div>
+
+
+
+<div class="watermark">
+
+♕𝚖𝚎𝚑𝚛𝚜𝚊𝚖 𝚐𝚊𝚖𝚎𝚛♕
+
+</div>
+
+
+
+<div class="info">
+
+<h2>${video.title}</h2>
+
+<p>${video.desc}</p>
+
+</div>
+
+
+
+<div class="buttons">
+
+
+<button class="likeBtn">
+❤️
+</button>
+
+
+<button class="shareBtn">
+🔗
+</button>
+
+
+</div>
+
+`;
+
+
+
+explore.appendChild(short);
+
+
+
+// ساخت امبد آپارات
+
+let script=document.createElement("script");
+
+script.type="text/javascript";
+
+script.src=
+"https://www.aparat.com/embed/"
++video.embed+
+"?data[rnddiv]="+id+
+"&data[responsive]=yes";
+
+
+
+document.getElementById(id).appendChild(script);
+
+
+
+});
+
+
+
+</script>
+<script>
+
+
+// ❤️ سیستم لایک جدا برای هر ویدیو
+
+document.querySelectorAll(".likeBtn").forEach(button=>{
+
+
+let liked=false;
+
+
+button.onclick=function(){
+
+
+liked=!liked;
+
+
+if(liked){
+
+this.innerHTML="💖";
+
+}else{
+
+this.innerHTML="❤️";
+
+}
+
+
+};
+
+
+});
+
+
+
+
+
+// 🔗 اشتراک گذاری جدا برای هر ویدیو
+
+document.querySelectorAll(".shareBtn").forEach(button=>{
+
+
+button.onclick=function(){
+
+
+if(navigator.share){
+
+
+navigator.share({
+
+title:"♕ Mehrsam Shorts ♕",
+
+text:"این ویدیو را ببین 🔥",
+
+url:location.href
+
+
+});
+
+
+}else{
+
+
+navigator.clipboard.writeText(location.href);
+
+
+alert("لینک کپی شد ✅");
+
+
+}
+
+
+};
+
+
+});
+
+
+
+</script>
+
+
+</body>
+
+</html>
