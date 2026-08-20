@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#060814">
+<title>MEHRSAM VAULT</title>
+<style>
+*{box-sizing:border-box}
+:root{
+ --bg:#060814;--text:#eef4ff;--muted:#9aa8c4;--line:#ffffff18;
+ --glass:linear-gradient(135deg,#ffffff16,#ffffff06);
+ --accent:linear-gradient(135deg,#7654ff,#00c9ff);
+}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);
+font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;overflow-x:hidden}
+body:before,body:after{content:"";position:fixed;z-index:-1;width:330px;height:330px;border-radius:50%;
+filter:blur(80px);opacity:.38;animation:float 9s ease-in-out infinite alternate}
+body:before{background:#7048ff;top:-120px;left:-100px}
+body:after{background:#00c9ff;right:-130px;bottom:-130px;animation-delay:-4s}
+@keyframes float{to{transform:translate(45px,35px) scale(1.12)}}
+.wrap{width:min(1080px,92%);margin:auto;padding:14px 0 35px}
+.glass{background:var(--glass);border:1px solid var(--line);box-shadow:0 20px 70px #0008,inset 0 1px #fff1;
+backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-radius:25px}
+nav{display:flex;align-items:center;justify-content:space-between;padding:12px 15px;margin-bottom:14px}
+.brand{font-size:20px;font-weight:950;letter-spacing:1px}.brand span{color:#75ddff}
+.nav{display:flex;gap:7px}
+button,.filePick{font:inherit;color:#fff;border:1px solid var(--line);background:#ffffff0d;border-radius:13px;
+padding:10px 13px;cursor:pointer;transition:.2s}
+button:hover,.filePick:hover{transform:translateY(-2px);background:#ffffff17}
+.primary{background:var(--accent)!important;border:0!important}
+.hero{text-align:center;padding:30px 16px}
+.hero h1{margin:0;font-size:clamp(34px,8vw,58px);background:linear-gradient(90deg,#fff,#8ceaff,#aa98ff);
+-webkit-background-clip:text;color:transparent}.hero p{color:var(--muted);margin:8px 0 20px}
+.filePick{display:inline-block}.filePick input{display:none}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+.stat{text-align:center;padding:16px 8px}.num{font-size:27px;font-weight:900}.label{font-size:12px;color:var(--muted);margin-top:3px}
+.main{display:grid;grid-template-columns:1.35fr .75fr;gap:14px}.panel{padding:18px}.panel h2{margin:0 0 14px;font-size:18px}
+.files{display:grid;gap:9px}.file{display:flex;align-items:center;gap:9px;padding:10px;border:1px solid #ffffff0b;
+background:#0003;border-radius:17px;min-width:0}.thumb{width:54px;height:54px;flex:0 0 54px;border-radius:14px;
+background:#ffffff0a;display:grid;place-items:center;overflow:hidden}.thumb img,.thumb video{width:100%;height:100%;object-fit:cover}
+.icon{font-size:25px}.info{min-width:0;flex:1}.name{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta{font-size:11px;color:#8996b0;margin-top:3px}.file button{padding:8px 10px;flex:0 0 auto}
+.empty{text-align:center;color:#8592ad;padding:38px 10px}
+.cardText{color:#a6b2ca;font-size:13px;line-height:1.8}.link{display:flex;gap:9px;align-items:center;margin-top:13px;padding:12px;
+border-radius:15px;color:#fff;text-decoration:none;background:#ffffff0b;border:1px solid var(--line)}
+.modal{position:fixed;inset:0;background:#000c;backdrop-filter:blur(15px);display:flex;align-items:center;justify-content:center;
+padding:18px;z-index:50}.hide{display:none!important}.box{width:min(430px,100%);padding:23px}.box h1{margin:0 0 5px;font-size:27px}
+.box p{color:var(--muted);font-size:13px}.field{margin:11px 0}.field label{display:block;color:#aab5cc;font-size:12px;margin-bottom:6px}
+input.text{width:100%;padding:13px;border-radius:13px;border:1px solid var(--line);background:#0005;color:#fff;outline:0;font:inherit}
+.row{display:flex;gap:8px;margin-top:10px}.row button{flex:1}.toast{position:fixed;bottom:18px;left:50%;transform:translate(-50%,20px);
+opacity:0;background:#151c30;border:1px solid var(--line);padding:11px 16px;border-radius:14px;z-index:100;transition:.25s}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.progress{height:5px;background:#ffffff0d;border-radius:10px;overflow:hidden;margin-top:10px;display:none}.progress i{display:block;height:100%;width:0;background:var(--accent)}
+@media(max-width:700px){.stats{grid-template-columns:repeat(2,1fr)}.main{grid-template-columns:1fr}.wrap{width:93%}
+nav{padding:10px 11px}.brand{font-size:17px}.hero{padding:24px 12px}button,.filePick{padding:9px 10px}.file button{padding:8px}}
+</style>
+</head>
+<body>
+
+<div id="login" class="modal">
+ <div class="glass box">
+  <div class="brand">MEHRSAM <span>VAULT</span></div>
+  <h1 id="loginTitle">ورود امن</h1>
+  <p id="loginDesc">برای ورود به Vault نام کاربری و رمز عبور خود را وارد کنید.</p>
+  <div class="field"><label>Username</label><input id="username" class="text" autocomplete="username"></div>
+  <div class="field"><label>Password</label><input id="password" class="text" type="password" autocomplete="current-password"></div>
+  <button id="loginBtn" class="primary" style="width:100%">ورود به Vault</button>
+  <p id="hint" style="font-size:11px;margin-bottom:0">در اولین اجرا حساب شما ساخته می‌شود.</p>
+ </div>
+</div>
+
+<div class="wrap">
+ <nav class="glass">
+  <div class="brand">MEHRSAM <span>VAULT</span></div>
+  <div class="nav"><button id="langBtn">EN</button><button id="lockBtn">🔒 قفل</button></div>
+ </nav>
+
+ <section class="glass hero">
+  <h1>MEHRSAM VAULT</h1>
+  <p id="subtitle">فضای خصوصی فایل‌های شما، مستقیم روی دستگاه</p>
+  <label class="filePick primary">＋ <span id="addText">افزودن فایل</span><input id="fileInput" type="file" multiple></label>
+  <div id="progress" class="progress"><i></i></div>
+ </section>
+
+ <section class="stats">
+  <div class="glass stat"><div class="num" id="total">0</div><div class="label" id="totalLabel">کل فایل‌ها</div></div>
+  <div class="glass stat"><div class="num" id="images">0</div><div class="label" id="imagesLabel">عکس</div></div>
+  <div class="glass stat"><div class="num" id="videos">0</div><div class="label" id="videosLabel">ویدیو</div></div>
+  <div class="glass stat"><div class="num" id="others">0</div><div class="label" id="othersLabel">سایر</div></div>
+ </section>
+
+ <div class="main">
+  <section class="glass panel">
+   <h2 id="filesTitle">📁 فایل‌های Vault</h2>
+   <div id="files" class="files"></div>
+  </section>
+
+  <aside class="glass panel">
+   <h2 id="securityTitle">🛡️ امنیت</h2>
+   <p id="securityText" class="cardText">فایل‌ها در حافظه محلی همین مرورگر نگهداری می‌شوند و تا زمانی که Vault باز است در دسترس هستند.</p>
+   <button id="changePass" class="primary" style="width:100%">🔐 تغییر رمز</button>
+   <button id="backupBtn" style="width:100%;margin-top:8px">📦 پشتیبان‌گیری کامل</button>
+   <button id="restoreBtn" style="width:100%;margin-top:8px">♻️ بازیابی پشتیبان</button>
+   <input id="backupInput" type="file" accept=".mvault" style="display:none">
+   <button id="clearBtn" style="width:100%;margin-top:8px">🧹 حذف همه فایل‌ها</button>
+   <a class="link" href="https://rubika.ir/mehrsam_303" target="_blank" rel="noopener">◉ <b>mehrsam_303</b></a>
+  </aside>
+ </div>
+</div>
+
+<div id="passModal" class="modal hide">
+ <div class="glass box">
+  <div class="brand">MEHRSAM <span>VAULT</span></div>
+  <h1>تغییر رمز</h1>
+  <p>رمز فعلی و سپس رمز جدید را وارد کنید.</p>
+  <input id="oldPass" class="text" type="password" placeholder="رمز فعلی">
+  <input id="newPass" class="text" type="password" placeholder="رمز جدید، حداقل 8 کاراکتر" style="margin-top:7px">
+  <div class="row"><button id="cancelPass">لغو</button><button id="confirmPass" class="primary">تغییر رمز</button></div>
+ </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+let db=null, key=null, logged=false, username="", language="fa";
+
+const T={
+ fa:{login:"ورود امن",desc:"برای ورود به Vault نام کاربری و رمز عبور خود را وارد کنید.",first:"در اولین اجرا حساب شما ساخته می‌شود.",
+ enter:"ورود به Vault",add:"افزودن فایل",total:"کل فایل‌ها",images:"عکس",videos:"ویدیو",others:"سایر",
+ files:"📁 فایل‌های Vault",security:"🛡️ امنیت",securityText:"فایل‌ها در حافظه محلی همین مرورگر نگهداری می‌شوند و تا زمانی که Vault باز است در دسترس هستند.",
+ change:"🔐 تغییر رمز",locked:"Vault قفل شد.",wrong:"نام کاربری یا رمز اشتباه است.",empty:"هنوز فایلی اضافه نشده است.",
+ deleted:"فایل حذف شد.",cleared:"همه فایل‌ها حذف شدند.",need:"ابتدا وارد شوید."},
+ en:{login:"Secure Login",desc:"Enter your username and password to enter the Vault.",first:"Your account will be created on first run.",
+ enter:"Enter Vault",add:"Add files",total:"Total files",images:"Images",videos:"Videos",others:"Other",
+ files:"📁 Vault Files",security:"🛡️ Security",securityText:"Files are stored locally in this browser and remain available while the Vault is unlocked.",
+ change:"🔐 Change password",locked:"Vault locked.",wrong:"Wrong username or password.",empty:"No files added yet.",
+ deleted:"File deleted.",cleared:"All files deleted.",need:"Please log in first."}
+};
+const tr=k=>T[language][k]||k;
+
+function toast(msg){$("toast").textContent=msg;$("toast").classList.add("on");clearTimeout(window.tt);window.tt=setTimeout(()=>$("toast").classList.remove("on"),2200)}
+
+function openDB(){
+ return new Promise((resolve,reject)=>{
+  const req=indexedDB.open("MEHRSAM_VAULT_DB",1);
+  req.onupgradeneeded=e=>{
+   const d=e.target.result;
+   if(!d.objectStoreNames.contains("meta"))d.createObjectStore("meta",{keyPath:"id"});
+   if(!d.objectStoreNames.contains("files"))d.createObjectStore("files",{keyPath:"id",autoIncrement:true});
+  };
+  req.onsuccess=e=>{db=e.target.result;resolve()};
+  req.onerror=()=>reject(req.error);
+ });
+}
+function getMeta(id){
+ return new Promise((res,rej)=>{let r=db.transaction("meta").objectStore("meta").get(id);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})
+}
+function putMeta(v){
+ return new Promise((res,rej)=>{let r=db.transaction("meta","readwrite").objectStore("meta").put(v);r.onsuccess=()=>res();r.onerror=()=>rej(r.error)})
+}
+function getFiles(){
+ return new Promise((res,rej)=>{let r=db.transaction("files").objectStore("files").getAll();r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})
+}
+function putFile(v){
+ return new Promise((res,rej)=>{let r=db.transaction("files","readwrite").objectStore("files").put(v);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})
+}
+function deleteFile(id){
+ return new Promise((res,rej)=>{let r=db.transaction("files","readwrite").objectStore("files").delete(id);r.onsuccess=()=>res();r.onerror=()=>rej(r.error)})
+}
+function clearFiles(){
+ return new Promise((res,rej)=>{let r=db.transaction("files","readwrite").objectStore("files").clear();r.onsuccess=()=>res();r.onerror=()=>rej(r.error)})
+}
+
+async function digest(text){
+ const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(text));
+ return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");
+}
+async function makeKey(pass,salt){
+ const raw=await crypto.subtle.importKey("raw",new TextEncoder().encode(pass),"PBKDF2",false,["deriveKey"]);
+ return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:100000,hash:"SHA-256"},raw,{name:"AES-GCM",length:256},false,["encrypt","decrypt"]);
+}
+
+async function login(){
+ const u=$("username").value.trim(), p=$("password").value;
+ if(!u||p.length<8){toast("Username و Password حداقل 8 کاراکتر لازم دارد.");return}
+ const acc=await getMeta("account");
+ if(!acc){
+  const salt=crypto.getRandomValues(new Uint8Array(16));
+  key=await makeKey(p,salt);
+  await putMeta({id:"account",user:u,hash:await digest(p),salt:[...salt]});
+  username=u;logged=true;$("login").classList.add("hide");await render();toast("حساب ساخته شد.");
+  return;
+ }
+ if(u!==acc.user||await digest(p)!==acc.hash){toast(tr("wrong"));return}
+ key=await makeKey(p,new Uint8Array(acc.salt));username=u;logged=true;$("login").classList.add("hide");await render();
+}
+
+function lock(){
+ logged=false;key=null;username="";$("username").value="";$("password").value="";$("login").classList.remove("hide");toast(tr("locked"));
+}
+
+function bytes(n){
+ const units=["B","KB","MB","GB"];let i=0;
+ while(n>=1024&&i<3){n/=1024;i++}return n.toFixed(i?1:0)+" "+units[i];
+}
+
+async function addFiles(list){
+ if(!logged||!key){toast(tr("need"));return}
+ const arr=[...list];if(!arr.length)return;
+ $("progress").style.display="block";
+ for(let i=0;i<arr.length;i++){
+  const f=arr[i], data=await f.arrayBuffer(), iv=crypto.getRandomValues(new Uint8Array(12));
+  const encrypted=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,data);
+  await putFile({name:f.name,type:f.type,size:f.size,iv:[...iv],data:encrypted,created:Date.now()});
+  $("progress").firstElementChild.style.width=((i+1)/arr.length*100)+"%";
+ }
+ $("fileInput").value="";setTimeout(()=>{$("progress").style.display="none";$("progress").firstElementChild.style.width="0"},300);
+ await render();toast("فایل‌ها ذخیره شدند.");
+}
+
+async function openFile(f){
+ try{
+  const plain=await crypto.subtle.decrypt({name:"AES-GCM",iv:new Uint8Array(f.iv)},key,f.data);
+  const blob=new Blob([plain],{type:f.type||"application/octet-stream"}), url=URL.createObjectURL(blob);
+  if(f.type.startsWith("image/")){
+   const w=window.open();if(!w){toast("پنجره پیش‌نمایش توسط مرورگر مسدود شد.");return}
+   w.document.write('<body style="margin:0;background:#000;display:grid;place-items:center;height:100vh"><img style="max-width:100%;max-height:100%" src="'+url+'"></body>');
+  }else if(f.type.startsWith("video/")){
+   const w=window.open();if(!w){toast("پنجره پیش‌نمایش توسط مرورگر مسدود شد.");return}
+   w.document.write('<body style="margin:0;background:#000;display:grid;place-items:center;height:100vh"><video controls autoplay style="max-width:100%;max-height:100%" src="'+url+'"></video></body>');
+  }else{
+   const a=document.createElement("a");a.href=url;a.download=f.name;document.body.appendChild(a);a.click();a.remove();
+  }
+ }catch(e){console.error(e);toast("این فایل قابل بازکردن نیست.")}
+}
+
+async function render(){
+ const fs=await getFiles();
+ $("total").textContent=fs.length;
+ $("images").textContent=fs.filter(f=>f.type.startsWith("image/")).length;
+ $("videos").textContent=fs.filter(f=>f.type.startsWith("video/")).length;
+ $("others").textContent=fs.filter(f=>!f.type.startsWith("image/")&&!f.type.startsWith("video/")).length;
+ const box=$("files");box.innerHTML="";
+ if(!fs.length){box.innerHTML='<div class="empty">'+tr("empty")+"</div>";return}
+ fs.sort((a,b)=>b.created-a.created).forEach(f=>{
+  const row=document.createElement("div");row.className="file";
+  const thumb=document.createElement("div");thumb.className="thumb";
+  thumb.innerHTML='<div class="icon">'+(f.type.startsWith("image/")?"🖼️":f.type.startsWith("video/")?"🎬":"📄")+"</div>";
+  const info=document.createElement("div");info.className="info";
+  const nm=document.createElement("div");nm.className="name";nm.textContent=f.name;
+  const meta=document.createElement("div");meta.className="meta";meta.textContent=bytes(f.size);
+  info.append(nm,meta);
+  const open=document.createElement("button");open.textContent=f.type.startsWith("image/")||f.type.startsWith("video/")?"👁️":"⬇️";open.onclick=()=>openFile(f);
+  const rm=document.createElement("button");rm.textContent="🗑️";rm.onclick=async()=>{if(confirm(language==="fa"?"این فایل حذف شود؟":"Delete this file?")){await deleteFile(f.id);await render();toast(tr("deleted"))}};
+  row.append(thumb,info,open,rm);box.append(row);
+ });
+}
+
+async function backupVault(){
+ if(!logged||!key){toast(tr("need"));return}
+ try{
+  const acc=await getMeta("account");
+  const files=await getFiles();
+
+  // The backup contains the account metadata and the already-encrypted file blobs.
+  // It does NOT contain the user's password in plain text.
+  const payload={
+   format:"MEHRSAM_VAULT_BACKUP",
+   version:1,
+   created:new Date().toISOString(),
+   account:acc,
+   files:files.map(f=>({
+    id:f.id,name:f.name,type:f.type,size:f.size,iv:f.iv,created:f.created,
+    data:Array.from(new Uint8Array(f.data))
+   }))
+  };
+
+  const blob=new Blob([JSON.stringify(payload)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="MEHRSAM_VAULT_backup_"+new Date().toISOString().slice(0,10)+".mvault";
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  toast(language==="fa"?"پشتیبان کامل ذخیره شد.":"Full backup saved.");
+ }catch(e){
+  console.error(e);toast("خطا در ساخت پشتیبان.");
+ }
+}
+
+async function restoreVault(file){
+ if(!logged||!key){toast(tr("need"));return}
+ try{
+  const text=await file.text();
+  const backup=JSON.parse(text);
+
+  if(backup.format!=="MEHRSAM_VAULT_BACKUP"||backup.version!==1||!backup.account||!Array.isArray(backup.files)){
+   throw new Error("Invalid backup");
+  }
+
+  const current=await getMeta("account");
+  if(!current||backup.account.user!==current.user||backup.account.hash!==current.hash){
+   toast(language==="fa"?"این پشتیبان مربوط به همین حساب نیست.":"This backup belongs to another account.");
+   return;
+  }
+
+  // Verify the current password/key can decrypt every backup file before changing anything.
+  const restored=[];
+  for(const f of backup.files){
+   const encrypted=new Uint8Array(f.data).buffer;
+   await crypto.subtle.decrypt({name:"AES-GCM",iv:new Uint8Array(f.iv)},key,encrypted);
+   restored.push({
+    id:f.id,name:f.name,type:f.type,size:f.size,iv:f.iv,data:encrypted,created:f.created
+   });
+  }
+
+  if(!confirm(language==="fa"
+    ?"فایل‌های فعلی با فایل‌های موجود در پشتیبان جایگزین شوند؟"
+    :"Replace the current files with the backup?")) return;
+
+  await clearFiles();
+  for(const f of restored) await putFile(f);
+  await render();
+  toast(language==="fa"?"پشتیبان با موفقیت بازیابی شد.":"Backup restored successfully.");
+ }catch(e){
+  console.error(e);
+  toast(language==="fa"?"پشتیبان خراب است یا رمز فعلی با آن سازگار نیست.":"Backup is invalid or does not match the current password.");
+ }
+}
+
+function applyLanguage(){
+ const x=T[language];
+ $("loginTitle").textContent=x.login;$("loginDesc").textContent=x.desc;$("hint").textContent=x.first;$("loginBtn").textContent=x.enter;
+ $("addText").textContent=x.add;$("totalLabel").textContent=x.total;$("imagesLabel").textContent=x.images;$("videosLabel").textContent=x.videos;$("othersLabel").textContent=x.others;
+ $("filesTitle").textContent=x.files;$("securityTitle").textContent=x.security;$("securityText").textContent=x.securityText;$("changePass").textContent=x.change;
+ $("langBtn").textContent=language==="fa"?"EN":"FA";document.documentElement.lang=language;document.documentElement.dir=language==="fa"?"rtl":"ltr";
+}
+
+$("loginBtn").onclick=login;
+$("password").onkeydown=e=>{if(e.key==="Enter")login()};
+$("lockBtn").onclick=lock;
+$("fileInput").onchange=e=>addFiles(e.target.files);
+$("langBtn").onclick=()=>{language=language==="fa"?"en":"fa";applyLanguage();if(logged)render()};
+$("changePass").onclick=()=>{$("passModal").classList.remove("hide");$("oldPass").value="";$("newPass").value="";$("oldPass").focus()};
+$("backupBtn").onclick=backupVault;
+$("restoreBtn").onclick=()=>$("backupInput").click();
+$("backupInput").onchange=e=>{const f=e.target.files[0];if(f)restoreVault(f);e.target.value=""};
+$("cancelPass").onclick=()=>$("passModal").classList.add("hide");
+$("clearBtn").onclick=async()=>{
+ if(!logged){toast(tr("need"));return}
+ if(confirm(language==="fa"?"تمام فایل‌ها حذف شوند؟":"Delete all files?")){await clearFiles();await render();toast(tr("cleared"))}
+};
+$("confirmPass").onclick=async()=>{
+ const oldP=$("oldPass").value,newP=$("newPass").value,acc=await getMeta("account");
+ if(!acc||await digest(oldP)!==acc.hash){toast(tr("wrong"));return}
+ if(newP.length<8){toast("رمز جدید باید حداقل 8 کاراکتر باشد.");return}
+ const oldKey=await makeKey(oldP,new Uint8Array(acc.salt)),newSalt=crypto.getRandomValues(new Uint8Array(16)),newKey=await makeKey(newP,newSalt),fs=await getFiles();
+ for(const f of fs){
+  const plain=await crypto.subtle.decrypt({name:"AES-GCM",iv:new Uint8Array(f.iv)},oldKey,f.data);
+  const iv=crypto.getRandomValues(new Uint8Array(12));
+  f.data=await crypto.subtle.encrypt({name:"AES-GCM",iv},newKey,plain);f.iv=[...iv];await putFile(f);
+ }
+ await putMeta({id:"account",user:acc.user,hash:await digest(newP),salt:[...newSalt]});
+ key=newKey;$("passModal").classList.add("hide");toast(language==="fa"?"رمز تغییر کرد.":"Password changed.");
+};
+
+(async()=>{
+ try{
+  await openDB();applyLanguage();
+  const acc=await getMeta("account");
+  if(acc)$("hint").textContent=language==="fa"?"حساب ساخته شده است؛ رمز خود را وارد کنید.":"Account exists; enter your password.";
+ }catch(e){console.error(e);$("hint").textContent="خطا در راه‌اندازی حافظه مرورگر."}
+})();
+</script>
+</body>
+</html>
